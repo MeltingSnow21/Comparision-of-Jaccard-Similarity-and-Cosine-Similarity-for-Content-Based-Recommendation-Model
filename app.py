@@ -27,6 +27,7 @@ from Sastrawi.Stemmer.StemmerFactory import StemmerFactory #import library sastr
 
 import re
 
+global x1,x2,x3
 
 
 
@@ -41,24 +42,52 @@ def Validator(x):
     else:
         return False
 
-def Rekomen_Cos (title) :
+def Hasil_aktual (title, A) :
+    if title in indices:    
+        x = df_rekomendasi[df_rekomendasi['Judul'] == title]['Aktual'].values[0]
+        y1 = df_rekomendasi[df_rekomendasi['Judul'] == title]['MAE_Cos'].values[0]
+        y2 = df_rekomendasi[df_rekomendasi['Judul'] == title]['MAE_Jac'].values[0]
+        y3 = df_rekomendasi[df_rekomendasi['Judul'] == title]['MAE_Cos2'].values[0]
+        y4 = df_rekomendasi[df_rekomendasi['Judul'] == title]['MAE_Jac2'].values[0]
+        
+        
+        x = re.findall(r'\d+', x)
+        x = res = [eval(i) for i in x]
+        if A :
+            return x, y1, y2, y3, y4
+        else :
+            df2=df_rekomendasi[df_rekomendasi.index.isin(x)]
+            y = df2['Judul']
+            return y
+    else : return ("Tidak ada  berita seperti itu")
+    
+def Rekomen_Cos (title, A) :
     if title in indices:    
         x = df_rekomendasi[df_rekomendasi['Judul'] == title]['Cossine Rekomend'].values[0]
         x = re.findall(r'\d+', x)
         x = res = [eval(i) for i in x]
-        df2=df_rekomendasi[df_rekomendasi.index.isin(x)]
-        y = df2['Judul']
-        return y
+        
+        if A :
+            return x
+        
+        else : 
+            df2=df_rekomendasi[df_rekomendasi.index.isin(x)]
+            y = df2['Judul']
+            return y
     else : return ("Tidak ada  berita seperti itu")
     
-def Rekomen_Jac (title) :
+def Rekomen_Jac (title, A) :
     if title in indices:    
         x = df_rekomendasi[df_rekomendasi['Judul'] == title]['Jaccard Recommned'].values[0]
         x = re.findall(r'\d+', x)
         x = res = [eval(i) for i in x]
-        df2=df_rekomendasi[df_rekomendasi.index.isin(x)]
-        y = df2['Judul']
-        return y
+        if A :
+            return x
+       
+        else :
+            df2=df_rekomendasi[df_rekomendasi.index.isin(x)]
+            y = df2['Judul']
+            return y
     else : return ("Tidak ada  berita seperti itu")
 
 
@@ -97,9 +126,8 @@ with st.sidebar :
 if selected == "Tentang Kami" :
 
     #header
-    st.subheader("Randi Baraku - 119140061")
-    st.title("""PERBANDINGAN METODE JACCARD SIMILARITY  DENGAN COSINE SIMILARITY  PADA TF-IDF UNTUK MODEL REKOMENDASI BERITA
-(Studi Kasus : Berita Radar Lampung Online)  :turtle: """)
+    st.subheader("Projek Tugas Akhir")
+    st.title("""Perbandingan Metode jaccard Similarity dengan Cosine Similarity dengan TF-IDF untuk Model Rekomendasi Berita :turtle: """)
     st.write(
             "Projek ini diselesaikan menggunakan 50 berita yang diperoleh dari PT Radar Lampung Onine [berikut](https://docs.google.com/spreadsheets/d/1PFN00mO25bN1xK_kHNO3XQYLNtRepg2GeX3wQPf55MI/edit#gid=436355456). "
         )
@@ -127,9 +155,7 @@ if selected == "Tentang Kami" :
                - Nama          : randi baraku
                - NIM           : 119140061
                - Program Studi : Teknik Informatika
-               - Angkatan      : 2019
-                
-                                
+               - Angkatan      : 2019           
                 """
             )
            
@@ -159,10 +185,7 @@ if selected == "Tentang Kami" :
                 """
                 
                 
-            )
-        
-        
-        
+            )          
 
 #halaman pembahasan
 if selected == "Pembahasan" :
@@ -235,11 +258,11 @@ elif  selected == "Rekomendasi" :
 
     # header
     st.subheader("Model rekoemendasi Berita")
-    st.title("""Rekomendasi Berita Menggunakan Cosine Similarity dan Jaccard Similarity :turtle: """)
+    st.title("""Perbandingan Metode Jaccard Similarity dengan Cosine Similarity dengan TF-IDF untuk Model Rekomendasi Berita :turtle: """)
     st.write(
             "Masukan judul berita yang ingin direkomendasikan : "
         )
-    title = st.text_input('Input Judul film', 'Panggil Pejabat Polri Tanpa Ajudan, Begini Penjelasan Jokowi ke Awak Media')
+    title = st.text_input('Input Judul Berita', 'Panggil Pejabat Polri Tanpa Ajudan, Begini Penjelasan Jokowi ke Awak Media')
     st.write('Film yang ingin direkomendasikan saat ini adalah', title)
 
     #tombol
@@ -248,7 +271,7 @@ elif  selected == "Rekomendasi" :
         
         A = Validator(title)
         with st.spinner('Wait for it...'):
-            sleep(2)
+            sleep(1)
         if A : 
             with st.container():
                 st.write("---")
@@ -256,33 +279,85 @@ elif  selected == "Rekomendasi" :
                 with left_column:
                     st.subheader("Rekomendasi Berdasarkan Cosine Similarity")
                     st.write("##")
-                    A = Rekomen_Cos(title)
+                    A = Rekomen_Cos(title, False)
                     st.write(A)
                     
                 with right_column:
                     st.subheader("Rekomendasi Berdasarkan Jaccard Similarity")
                     st.write("##")
-                    A = Rekomen_Jac(title)
+                    A = Rekomen_Jac(title, False)
                     st.write(A)
-        
+            with st.container():
+                
+                st.subheader ("Hasil Sebenarnya")
+                A = Rekomen_Cos(title, False)
+                st.write(A)
+            with st.container():
+                st.write("---")
+                st.subheader("Perbandingan Hasil")
+
+                x1 = Rekomen_Cos(title, True)
+                x2 = Rekomen_Jac(title, True)
+                x3, y1, y2, y3, y4 = Hasil_aktual(title, True)
+                
+                if isinstance(x1, list): 
+                    x1.sort()
+
+                if isinstance(x2, list):
+                    x2.sort()
+                
+                if isinstance(x3, list):
+                    x3.sort()
+                
+ 
+                chart_data = pd.DataFrame(
+                    list(zip(x1, x2, x3)),
+                    columns=["Cosine", "Jaccard", "Aktual"])
+                st.area_chart(chart_data)             
+            
+            with st.container():
+                st.write("---")
+                st.subheader("Perbandingan Nilai Kesalahan")
+                st.write("Nilai kesalahan dari Cosine divisualisasikan pada index 0 dan Jaccard pada index 1")
+                a , b = st.columns(2)
+
+                with  a  :
+                    data = {'MAE': [y1, y2]}
+                    st.write("Mae dari Kedua Metode")
+                    st.bar_chart(data)
+                    
+                with  b  :
+                    data = {'MAE Kuadrat': [y3, y4]}
+                    st.write("Mae Kuadrat dari Kedua Metode")
+                    st.bar_chart(data)
+                        
+                
+                    
+
         else :
             with st.container():
                 st.write("---")
                 left_column, right_column = st.columns(2)
                 with left_column:
-                    st.header("Film tidak ditemukan")
+                    st.header("Berita tidak ditemukan")
                     st.write("##")
                     st.write(
                         """
-                        Sangat disayangkan karena keterbatasan database, film yang anda cari tidak ditemukan.
-                        Berikut kami rekomendasikan judul film yang dapat anda cari untuk melihat perbandingan antara lematisasi dan stemming.
-                        Anda dapat mencari:
-            
-                        - The Lord of the Rings: The Fellowship of the Ring
-                        - Avengers: Endgame
-                        - Rear Window
-
+                        Sangat disayangkan karena keterbatasan database, berita yang anda cari tidak ditemukan.
+                        kami juga tidak dapat mengakomodir sepenggal kata kunci karena 
+                        hal tersebut di luar dari batasan penelitian.
+                    
+                        
                         """
                     )
                 with right_column:
                     st_lottie(lottie_coding, height=300, key="coding")
+                st.write(
+                        """ 
+                        Berikut kami rekomendasikan judul berita yang dapat anda cari untuk melihat perbandingan antara Cossine dan jaccard.
+                        Anda dapat mencari:
+            
+                        - Pertumbuhan Angkatan Kerja dan Lowongan Kerja Tak Berimbang, Disnakertrans Mesuji Lirik Alumni SMA dan SMK
+                        - UBL Riset Bersama Diskominfotiksan Pemkab Pesawaran
+                        - Test Drive Hyundai Stargazer, Intip Kenyamanan dan Fitur Canggihnya!
+                        """ )

@@ -70,7 +70,8 @@ def load_lottieurl(url):
         return None
     return r.json()
 
-lottie_coding2 = load_lottieurl("https://assets3.lottiefiles.com/packages/lf20_bpqri9y8.json")
+lottie_coding3 = load_lottieurl("https://assets9.lottiefiles.com/private_files/lf30_pkibk91l.json")
+lottie_coding2 = load_lottieurl("https://assets9.lottiefiles.com/packages/lf20_tfb3estd.json")
 lottie_coding = load_lottieurl("https://assets7.lottiefiles.com/packages/lf20_r71cen62.json")
 
 
@@ -96,42 +97,72 @@ with st.sidebar :
 if selected == "Tentang Kami" :
 
     #header
-    st.subheader("Natural Language Processing - Kelompok 1")
-    st.title("""Perbandingan Lematisasi dan Stemming menggunakan Bag of Words Pada Model Rekomendasi Film :turtle: """)
+    st.subheader("Randi Baraku - 119140061")
+    st.title("""PERBANDINGAN METODE JACCARD SIMILARITY  DENGAN COSINE SIMILARITY  PADA TF-IDF UNTUK MODEL REKOMENDASI BERITA
+(Studi Kasus : Berita Radar Lampung Online)  :turtle: """)
     st.write(
-            "Projek ini diselesaikan menggunakan 1000 dataset film dari website IMDB yang diperoleh dari [Kaggle](https://www.kaggle.com/datasets). "
+            "Projek ini diselesaikan menggunakan 50 berita yang diperoleh dari PT Radar Lampung Onine [berikut](https://docs.google.com/spreadsheets/d/1PFN00mO25bN1xK_kHNO3XQYLNtRepg2GeX3wQPf55MI/edit#gid=436355456). "
         )
     st.write("Segala bentuk dokumentasi pada pengerjaannya diunggah pada Github terlampir")
 
 
     st.write("##")
-    st.info(":rocket: Kunjungi Github Pada [Tautan Berikut](https://github.com/MeltingSnow21/Comparision-of-Lematization-and-Stemming-in-Bahasa-for-Film-Recommndation-System--Based-By-Content)")
+    st.info(":rocket: Kunjungi Github Pada [Tautan Berikut](https://github.com/MeltingSnow21/Comparision-of-Jaccard-Similarity-and-Cosine-Similarity-for-Content-Based-Recommendation-Model)")
     with st.spinner('Wait for it...'):
-        sleep(2)
+        sleep(1)
     with st.container():
         st.write("---")
-        st.header("Tentang Kelompok")
+        st.header("Tentang Penulis")
 
         left_column, right_column = st.columns(2)
         with left_column:
             st.write(
                 """
-                Tugas besar ini diselesaikan oleh :\n
-                    - Randi Baraku      (119140061)          
-                    - Rifan Firmansyah  (111111111)     
-                    - Michele Jireh     (111111111)         
-                    - Kak Radha         (111111111)             
-                    - Viranti           (111111111)               
-                    - Shopia Nouriska   (111111111)       
-                    - Rian A Waskito    (119140030)    
-                    - Putu AK Yudha     (119140098) 
-                    - Samuel J Pardede  (11914010)  
+                Diajukan sebagai syarat menyelesaikan jenjang strata Satu (S-1) di Program Studi
+                Teknik Informatika, Jurusan Teknologi, Produksi dan Industri,
+                Institut Teknologi Sumatera
+                
+                Oleh
+                
+               - Nama          : randi baraku
+               - NIM           : 119140061
+               - Program Studi : Teknik Informatika
+               - Angkatan      : 2019
+                
+                                
                 """
             )
            
         with right_column:
             st_lottie(lottie_coding2, height=300, key="coding")
+    
+    with st.container():
+        st.write("---")
+        st.header("Tentang Projek")
 
+        left_column, right_column = st.columns(2)
+        with left_column : st_lottie(lottie_coding3, height=300, key="coding2")
+        
+        with right_column : 
+            st.write(
+                
+                """
+                Website ini diselesiakan untuk membantu dalam memvisualisasikan hasi dari tugas akhir.
+                Batasan dari website ini yaitu hanya dapat menampilkan judul dari hasil rekomendasi,
+                memberikan visualisasi berupa grafik perbandingan antara kedua hasil,
+                serta memberikan pembahasan singkat beserta kesimpuland dari projek yang diselesaikan.
+                
+                website ini tidak dapat mengkomodir pencarian untuk topik maupun sepenggal key word, hanya dapat mencari
+                judul secara keseluruhan untuk melihat perbandingan hasil kedua metode.
+                
+                
+                """
+                
+                
+            )
+        
+        
+        
 
 #halaman pembahasan
 if selected == "Pembahasan" :
@@ -203,12 +234,12 @@ if selected == "Pembahasan" :
 elif  selected == "Rekomendasi" :
 
     # header
-    st.subheader("Model rekoemendasi film")
-    st.title("""Rekomendasi Film Menggunakan Stemming dan Lematisasi :turtle: """)
+    st.subheader("Model rekoemendasi Berita")
+    st.title("""Rekomendasi Berita Menggunakan Cosine Similarity dan Jaccard Similarity :turtle: """)
     st.write(
-            "Masukan judul film yang ingin direkomendasikan : "
+            "Masukan judul berita yang ingin direkomendasikan : "
         )
-    title = st.text_input('Input Judul film', 'Life of Brian')
+    title = st.text_input('Input Judul film', 'Panggil Pejabat Polri Tanpa Ajudan, Begini Penjelasan Jokowi ke Awak Media')
     st.write('Film yang ingin direkomendasikan saat ini adalah', title)
 
     #tombol

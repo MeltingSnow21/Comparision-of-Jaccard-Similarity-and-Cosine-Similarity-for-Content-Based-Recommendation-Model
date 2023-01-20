@@ -174,11 +174,11 @@ if selected == "Tentang Kami" :
                 
                 """
                 Website ini diselesiakan untuk membantu dalam memvisualisasikan hasi dari tugas akhir.
-                Batasan dari website ini yaitu hanya dapat menampilkan judul dari hasil rekomendasi,
+                Batasan dari website ini yaitu; hanya dapat menampilkan judul dari hasil rekomendasi,
                 memberikan visualisasi berupa grafik perbandingan antara kedua hasil,
                 serta memberikan pembahasan singkat beserta kesimpuland dari projek yang diselesaikan.
                 
-                website ini tidak dapat mengkomodir pencarian untuk topik maupun sepenggal key word, hanya dapat mencari
+                website ini tidak dapat mengakomodir pencarian untuk topik maupun sepenggal key word, hanya dapat mencari
                 judul secara keseluruhan untuk melihat perbandingan hasil kedua metode.
                 
                 
@@ -191,12 +191,12 @@ if selected == "Tentang Kami" :
 if selected == "Pembahasan" :
 
     #header
-    st.subheader("Berikut ini merupakan hasil dari penelitian yang kami lakukan")
-    st.title("""Perbandingan Metode Teks Pre-Processing menggunakan Stemming dan Lematisasi:turtle: """)
+    st.subheader("Berikut ini merupakan pembahasan dari hasil penelitian yang telah dilakukan")
+    st.title("""Perbandingan Metode Cosine Similarity dengan TIF-IDF dan Jaccard Similarity :turtle: """)
     st.write("---")
     st.write("##")
-    st.subheader("Hasil")
-    st.write("Menggunakan metode Mean Absolute Error (MAE), Berikut ini merupakan hasil dari evaluasi 50 data film yang digunakan")
+    st.subheader("Hasil MAE")
+    st.write("Menggunakan metode Mean Absolute Error (MAE), Berikut ini merupakan hasil dari evaluasi 50 berita yang digunakan")
     
     y2 = df_rekomendasi[['MAE_Cos','MAE_Jac']].copy()
 
@@ -206,27 +206,45 @@ if selected == "Pembahasan" :
 
     #grafik satu
     st.line_chart(y2)
-    st.write("Dari visualisasi di atas tampak bahwa hasil yang diberikan oleh metode Lematisasi dan metode Stemming hampir sama, namun pada beberapa nomor sampel nilai MAE yang diberikan berbeda")
+    st.write("Dari visualisasi di atas tampak bahwa hasil yang diberikan oleh metode Cosine dan metode Jaccard hampir sama, namun pada beberapa nomor sampel nilai MAE yang diberikan berbeda")
 
-    st.write("---")
-
-    #grafik dua
     st.write("Untuk lebih jelasnya, kita dapat melihat perbantingan hasil dari kedua pengujian tersebut sebagai berikut")
     st.bar_chart(y2)
-    
+
     st.write("---")
     st.write("##")
-    st.subheader("Hasil")
-    st.write("Sample No 10, 32, dan 36 memberikan hasil yang berbeda, berikut ini adalah hasil dari pengujian tersebut")
+    st.subheader("Hasil RMSE")
+    st.write("Menggunakan metode Root Mean Square Error (RMSE), Berikut ini merupakan hasil dari evaluasi 50 data berita yang digunakan")
+    
+    y2 = df_rekomendasi[['MAE_Cos2','MAE_Jac2']].copy()
+
+    with st.spinner('Wait for it...'):
+        sleep(2)
+    
+    #grafik satu
+    st.line_chart(y2)
+    st.write("Dari visualisasi di atas tampak bahwa hasil yang diberikan oleh metode Cosine dan metode Jaccard hampir sama, namun pada beberapa nomor sampel nilai MAE yang diberikan berbeda")
+
+    st.write("Untuk lebih jelasnya, kita dapat melihat perbantingan hasil dari kedua pengujian tersebut sebagai berikut")
+    st.bar_chart(y2)
+
+
+    st.write("---")
+
+    st.write("##")
+    st.subheader("Perbandingan Sampel")
+    st.write("Sample No 2, 3, 9, 13, 25, 30, 31, 32, 33, 48, dan 49 memberikan hasil yang berbeda, berikut ini adalah hasil dari pengujian tersebut")
+
 
     #grafik perbandingan
-    yx = y2.loc[[10,32,36]]
+    y2 = df_rekomendasi[['MAE_Cos','MAE_Jac']].copy()
+    yx = y2.loc[[2, 3, 9, 13, 25, 30, 31, 32, 33, 48, 49]]
     a , b = st.columns(2)
     with  a  :
-        st.write("Hasil Stemming sampel")
+        st.write("Hasil Cosine sampel")
         st.bar_chart(yx['MAE_Cos'])
     with  b  :
-        st.write("Hasil Lematisasi sampel")
+        st.write("Hasil Jaccard sampel")
         st.bar_chart(yx['MAE_Jac'])
     st.write("""Perbedaan dari ketiga sampel diatas ke tiga-tiganya memberikan hasil bahwa nilai error yang diberikan oleh Hasil Stemming lebih kecil dari Hasil Lematisasi""")
 
@@ -234,23 +252,32 @@ if selected == "Pembahasan" :
     st.write("---")
     st.subheader("Hasil Akhir")
     st.write("Nilai rata-rata MAE dari kedua metode tersebut adalah sebagai berikut")
+    y2 = df_rekomendasi[['MAE_Cos','MAE_Jac']].copy()
     x = y2['MAE_Cos'].mean()
-    st.info (f"MAE Lematisasi : {x}")    
+    st.info (f"MAE Cosine : {x}")    
     x = y2['MAE_Jac'].mean()
-    st.info (f"MAE Stemming : {x}")
+    st.info (f"MAE jaccard : {x}")
+    
+    st.write("Nilai rata-rata RMSE dari kedua metode tersebut adalah sebagai berikut")
+    y2 = df_rekomendasi[['MAE_Cos2','MAE_Jac2']].copy()
+    x = y2['MAE_Cos2'].mean()
+    st.info (f"RMSE Cosine : {x}")    
+    x = y2['MAE_Jac2'].mean()
+    st.info (f"RMSE Jaccard : {x}")
     
     #Kesimpulan
     st.write("---")
     st.subheader("Kesimpulan")
     
-    st.write("""Dengan menggunakan 50 data pengujian, diperoleh perbedaan antara hasil MAE Lematisasi dan MAE Stemming
-             sebesar 0.2, Dengan nilai MAE Lematisasi lebih besar ketimbang MAE Stemming. Perbedaan ini
-             menyimpulkan bahwa menggunakan metode Bag of Word, hasil dari Stemming memberikan hasil yang lebih baik
-             ketimbang Lematisasi.
+    st.write("""Dengan menggunakan 50 data pengujian, diperoleh perbedaan antara hasil MAE Cosine dan MAE jaccard
+             sebesar 0.12, dan perbedaan antara hasil RMSE Lematisasi dan RMSE Stemming sebesar 0.6. Baik hasil MAE maupun RMSE keduanya 
+             memberikan hasil bahwa nilai kesalahan Jaccard lebih tinggi dari Cosine.  Perbedaan ini menyimpulkan bahwa dengan menggunakan
+             Content Base Recomendation, metode Cosine merupakan metode terbaik jika dibandingkan Jaccard untuk dataset
+             berita deskriptif.
              """)
 
     st.subheader("Saran")
-    st.write(""""Hasil dari penelitian sangat bergantung dari dataset yang digunakan, untuk memperoleh selisih yang lebih besar
+    st.write("""Hasil dari penelitian sangat bergantung dari dataset yang digunakan, untuk memperoleh selisih yang lebih besar
              dan signifikan, disarankan menggunakan volume data yang lebih besar dalam evaluasi.""")
         
 #halaman rekomendasi

@@ -330,7 +330,40 @@ elif selected == "Pencarian" :
         print(result_stem, cosine)
         
         x = pd.DataFrame({'Judul' : indices[result_stem], 'Cosine value' : cosine})
-        st.write(x)
+        x = x.loc[x["Cosine value"] > 0 ]
+        
+        if len(x) !=  0 :  st.write(x)
+        
+        else : 
+    
+            with st.container():
+                st.write("---")
+                left_column, right_column = st.columns(2)
+                with left_column:
+                    st.header("Berita tidak ditemukan")
+                    st.write("##")
+                    st.write(
+                        """
+                        Sangat disayangkan karena keterbatasan database, berita yang anda cari tidak ditemukan.
+                        kami juga tidak dapat mengakomodir sepenggal kata kunci karena 
+                        hal tersebut di luar dari batasan penelitian.
+                    
+                        
+                        """
+                    )
+                with right_column:
+                    st_lottie(lottie_coding, height=300, key="coding")
+                st.write(
+                        """ 
+                        Berikut kami rekomendasikan judul berita yang dapat anda cari untuk melihat perbandingan antara Cossine dan jaccard.
+                        Anda dapat mencari:
+            
+                        - Pertumbuhan Angkatan Kerja dan Lowongan Kerja Tak Berimbang, Disnakertrans Mesuji Lirik Alumni SMA dan SMK
+                        - UBL Riset Bersama Diskominfotiksan Pemkab Pesawaran
+                        - Test Drive Hyundai Stargazer, Intip Kenyamanan dan Fitur Canggihnya!
+                        """ )
+            
+
 
   
 #halaman rekomendasi

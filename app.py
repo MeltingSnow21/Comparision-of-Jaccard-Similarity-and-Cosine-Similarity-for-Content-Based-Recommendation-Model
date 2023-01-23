@@ -118,7 +118,7 @@ with st.sidebar :
     
     selected = option_menu(
         menu_title="Main Menu",
-        options=["Tentang Kami", "Rekomendasi", "Pembahasan"],
+        options=["Tentang Kami", "Rekomendasi", "Pembahasan", "Pencarian"],
         
     )
     
@@ -179,7 +179,8 @@ if selected == "Tentang Kami" :
                 serta memberikan pembahasan singkat beserta kesimpuland dari projek yang diselesaikan.
                 
                 website ini tidak dapat mengakomodir pencarian untuk topik maupun sepenggal key word, hanya dapat mencari
-                judul secara keseluruhan untuk melihat perbandingan hasil kedua metode.
+                judul secara keseluruhan untuk melihat perbandingan hasil kedua metode. adapun model pencarian
+                semata mata hanya mempermudah dalam memberi gambaran implementasi, dan bukan bagian dari batasan penelitain. 
                 
                 
                 """
@@ -188,7 +189,7 @@ if selected == "Tentang Kami" :
             )          
 
 #halaman pembahasan
-if selected == "Pembahasan" :
+elif selected == "Pembahasan" :
 
     #header
     st.subheader("Berikut ini merupakan pembahasan dari hasil penelitian yang telah dilakukan")
@@ -279,7 +280,59 @@ if selected == "Pembahasan" :
     st.subheader("Saran")
     st.write("""Hasil dari penelitian sangat bergantung dari dataset yang digunakan, untuk memperoleh selisih yang lebih besar
              dan signifikan, disarankan menggunakan volume data yang lebih besar dalam evaluasi.""")
+    
+#Halaman Pencarian
+elif selected == "Pencarian" :    
+    
+ # header
+    st.subheader("Model Pencarian Berita")
+    st.title("""Model Pencarian Berita Menggunakan metode Cosine Similarity dan pendekatan TF-IDF :turtle: """)
+    st.write(
+            "Masukan kata kunci dari berita yang ingin anda cari: "
+        )
+    title = st.text_input('Input Judul Berita', 'Jokowi makan salak')
+    st.write('Pencarian saat ini adalah', title)
+
+    #tombol
+    Tombol = st.button("Rekomendasikan")
+    if Tombol :
         
+        
+        df_cari = df_rekomendasi[['Judul', 'Deskripsi']]
+        df_cari = pd.DataFrame([['CARI2', title]], columns=df_cari.columns).append(df_cari)
+        komentar = [] #deklarasi variabel komentar pada list
+        komentar = df_cari['Deskripsi'].values.tolist() #masukan data kedalam list
+        
+        
+        from sklearn.feature_extraction.text import TfidfVectorizer
+        tf_idf = TfidfVectorizer(binary=True)
+        tfidf_mat = tf_idf.fit_transform(df_cari["Deskripsi"]).toarray()
+        x = tfidf_mat
+        
+        from sklearn.metrics.pairwise import cosine_similarity
+        df3 = pd.DataFrame(cosine_similarity(x, dense_output=True))
+        
+        indices = pd.Series(df_cari.Judul)
+        indices.index = range(0, len(df_cari))
+        
+        def recomend (title, cosine_sim):
+    
+            result = []
+            idx = indices[indices == title].index[0]
+            print (idx)
+            
+            score = pd.Series(cosine_sim[idx]).sort_values(ascending = False)
+            top_10 = list(score.iloc[1:6].index)
+            #result = indices[top_10]
+            return top_10  , score.iloc[1:6]
+        judul = "CARI2"
+        result_stem , cosine = recomend(judul, df3)
+        print(result_stem, cosine)
+        
+        x = pd.DataFrame({'Judul' : indices[result_stem], 'Cosine value' : cosine})
+        st.write(x)
+
+  
 #halaman rekomendasi
 elif  selected == "Rekomendasi" :
 

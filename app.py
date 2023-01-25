@@ -19,7 +19,6 @@ from sklearn.feature_extraction import text
 
 from openpyxl import load_workbook #library untuk menampilkan dokumen
 import pandas as pd #import pandas 
-from nltk.tokenize import word_tokenize #import library nltk - tokenize
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory #import library sastrawi untuk
 
 import re

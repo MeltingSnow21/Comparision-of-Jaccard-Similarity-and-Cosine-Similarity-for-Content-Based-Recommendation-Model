@@ -3,6 +3,7 @@
 from pathlib import Path
 import requests
 import streamlit as st
+import streamlit_lottie
 from streamlit_lottie import st_lottie
 import streamlit as st 
 from time import sleep

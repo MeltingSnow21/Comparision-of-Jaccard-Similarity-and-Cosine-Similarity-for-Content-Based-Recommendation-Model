@@ -14,7 +14,6 @@ import numpy as np
 
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
-nltk.download('stopwords')
 from sklearn.feature_extraction import text
 
 

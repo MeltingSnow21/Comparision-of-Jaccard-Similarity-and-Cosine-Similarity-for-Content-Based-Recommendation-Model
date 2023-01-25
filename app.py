@@ -28,7 +28,7 @@ global x1,x2,x3
 
 
 # membaca hasil akhir dan data evaluasi
-df_rekomendasi = pd.read_csv('hasilakhir.csv', delimiter=',')
+df_rekomendasi = pd.read_csv('DatasetFinal/hasilakhir.csv', delimiter=',')
 df_rekomendasi.head()
 indices = pd.Series(df_rekomendasi.index, index=df_rekomendasi['Judul']).drop_duplicates()
 

@@ -8,9 +8,6 @@ from streamlit_lottie import st_lottie
 import streamlit as st 
 from time import sleep
 from streamlit_option_menu import option_menu
-import nltk
-nltk.download('wordnet')
-nltk.download('stopwords')
 
 import pandas as pd
 import numpy as np

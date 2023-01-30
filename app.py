@@ -8,6 +8,9 @@ from streamlit_lottie import st_lottie
 import streamlit as st 
 from time import sleep
 from streamlit_option_menu import option_menu
+    
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 import pandas as pd
 import numpy as np
@@ -28,9 +31,16 @@ global x1,x2,x3
 
 
 # membaca hasil akhir dan data evaluasi
-df_rekomendasi = pd.read_csv('datasetFinal/hasilAkhir.csv', delimiter=',')
+df_rekomendasi = pd.read_csv('hasilAkhir.csv', delimiter=',')
 df_rekomendasi.head()
 indices = pd.Series(df_rekomendasi.index, index=df_rekomendasi['Judul']).drop_duplicates()
+
+# membaca hasil akhir cosine similarity
+df_cosine = pd.read_csv('cosine_similarity.csv', delimiter=',')
+
+#membaca hasil akhir jaccard
+df_jaccard = pd.read_csv('jaccard_similarity.csv', delimiter=',')
+
 
 def Validator(x):
     if x in indices:
@@ -197,9 +207,6 @@ elif selected == "Pembahasan" :
     
     y2 = df_rekomendasi[['MAE_Cos','MAE_Jac']].copy()
 
-    with st.spinner('Wait for it...'):
-        sleep(2)
-    
 
     #grafik satu
     st.line_chart(y2)
@@ -215,8 +222,7 @@ elif selected == "Pembahasan" :
     
     y2 = df_rekomendasi[['MAE_Cos2','MAE_Jac2']].copy()
 
-    with st.spinner('Wait for it...'):
-        sleep(2)
+  
     
     #grafik satu
     st.line_chart(y2)
@@ -244,6 +250,37 @@ elif selected == "Pembahasan" :
         st.write("Hasil Jaccard sampel")
         st.bar_chart(yx['MAE_Jac'])
     st.write("""Perbedaan dari ketiga sampel diatas ke tiga-tiganya memberikan hasil bahwa nilai error yang diberikan oleh Hasil Stemming lebih kecil dari Hasil Lematisasi""")
+
+
+    #HeatMap    
+    
+    st.write("---")
+    st.subheader("Heatmap")
+    st.write("Berikut ini merupakan hasil dari heatmap dari metode Cosine Similarity")
+
+    
+    #st.write(df_cosine)
+    fig, ax = plt.subplots()
+    fig.set_size_inches(25, 12)
+    fig.set_dpi(100)
+    sns.set(rc={'figure.facecolor':'#a8a8a8'})
+    sns.heatmap(df_cosine, ax=ax, cmap="cubehelix")
+    st.write(fig)
+    
+    #Heatmap Jaccard
+    st.write("Berikut ini merupakan hasil dari heatmap dari metode Jaccard Similarity")
+    fig, ax = plt.subplots()
+    fig.set_size_inches(25, 12)
+    fig.set_dpi(100)
+    sns.set(rc={'figure.facecolor':'#a8a8a8'})
+    sns.heatmap(df_jaccard, ax=ax, cmap="cubehelix")
+    st.write(fig)
+    
+    st.write("""Dari hasil Heatmap tersebut, kita bisa melihat bahwa masing masin indeks saling merekomendasikan terhadap
+             6 indeks terdekatnya, hal ini sesuai dengan pengelompokan setiap topik yang memiliki 6 judul berbeda.
+             Semakin terang warna cell, maka semakin tinggi nilai kesamaannya. nilai kesalahan dapat pula kita lihat
+             dari kelompok heatmap yang tidak memiliki warna seragam dari kelima cell yang berdekatan
+             """)
 
     #Hasil akhir
     st.write("---")
@@ -286,7 +323,7 @@ elif selected == "Pencarian" :
     st.write(
             "Masukan kata kunci dari berita yang ingin anda cari: "
         )
-    title = st.text_input('Input Judul Berita', 'Jokowi makan salak')
+    title = st.text_input('Input Judul Berita', 'Jokowi')
     st.write('Pencarian saat ini adalah', title)
 
     #tombol
@@ -359,9 +396,6 @@ elif selected == "Pencarian" :
                         - Test Drive Hyundai Stargazer, Intip Kenyamanan dan Fitur Canggihnya!
                         """ )
             
-
-
-  
 #halaman rekomendasi
 elif  selected == "Rekomendasi" :
 

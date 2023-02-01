@@ -236,12 +236,12 @@ elif selected == "Pembahasan" :
 
     st.write("##")
     st.subheader("Perbandingan Sampel")
-    st.write("Sample No 2, 3, 9, 13, 25, 30, 31, 32, 33, 48, dan 49 memberikan hasil yang berbeda, berikut ini adalah hasil dari pengujian tersebut")
+    st.write("Sample No 2, 3, 9, 13, 14, 32, 45, dan 47 memberikan hasil yang berbeda, berikut ini adalah hasil dari pengujian tersebut")
 
 
     #grafik perbandingan
     y2 = df_rekomendasi[['MAE_Cos','MAE_Jac']].copy()
-    yx = y2.loc[[2, 3, 9, 13, 25, 30, 31, 32, 33, 48, 49]]
+    yx = y2.loc[[2, 3, 9, 13, 14, 32, 45, 47]]
     a , b = st.columns(2)
     with  a  :
         st.write("Hasil Cosine sampel")

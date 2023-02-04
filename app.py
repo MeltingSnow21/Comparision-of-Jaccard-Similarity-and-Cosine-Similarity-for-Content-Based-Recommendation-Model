@@ -41,12 +41,22 @@ df_cosine = pd.read_csv('cosine_similarity.csv', delimiter=',')
 #membaca hasil akhir jaccard
 df_jaccard = pd.read_csv('jaccard_similarity.csv', delimiter=',')
 
+#memcbaca judul master
+df_judulmaster = pd.read_csv('JudulIndeks.csv', delimiter=',')
+indice_master = pd.Series(df_judulmaster.index, index=df_judulmaster['Judul']).drop_duplicates()
+
+
 
 def Validator(x):
-    if x in indices:
-        return True
+
+    if x in indice_master:
+        print("ada di judul master")
+        if x in indices:
+            return True, True
+        
+        else   : return True, False
     else:
-        return False
+        return False, False
 
 def Hasil_aktual (title, A) :
     if title in indices:    
@@ -62,7 +72,7 @@ def Hasil_aktual (title, A) :
         if A :
             return x, y1, y2, y3, y4
         else :
-            df2=df_rekomendasi[df_rekomendasi.index.isin(x)]
+            df2=df_judulmaster[df_judulmaster.index.isin(x)]
             y = df2['Judul']
             return y
     else : return ("Tidak ada  berita seperti itu")
@@ -77,8 +87,10 @@ def Rekomen_Cos (title, A) :
             return x
         
         else : 
-            df2=df_rekomendasi[df_rekomendasi.index.isin(x)]
+            df2=df_judulmaster[df_judulmaster.index.isin(x)]
+            print (x)
             y = df2['Judul']
+        
             return y
     else : return ("Tidak ada  berita seperti itu")
     
@@ -91,7 +103,7 @@ def Rekomen_Jac (title, A) :
             return x
        
         else :
-            df2=df_rekomendasi[df_rekomendasi.index.isin(x)]
+            df2=df_judulmaster[df_judulmaster.index.isin(x)]
             y = df2['Judul']
             return y
     else : return ("Tidak ada  berita seperti itu")
@@ -105,6 +117,7 @@ def load_lottieurl(url):
         return None
     return r.json()
 
+lottie_coding4 = load_lottieurl("https://assets4.lottiefiles.com/packages/lf20_GofK09iPAE.json")
 lottie_coding3 = load_lottieurl("https://assets9.lottiefiles.com/private_files/lf30_pkibk91l.json")
 lottie_coding2 = load_lottieurl("https://assets9.lottiefiles.com/packages/lf20_tfb3estd.json")
 lottie_coding = load_lottieurl("https://assets7.lottiefiles.com/packages/lf20_r71cen62.json")
@@ -412,70 +425,98 @@ elif  selected == "Rekomendasi" :
     Tombol = st.button("Rekomendasikan")
     if Tombol :
         
-        A = Validator(title)
+        A, B = Validator(title)
         with st.spinner('Wait for it...'):
             sleep(1)
         if A : 
-            with st.container():
-                st.write("---")
-                left_column, right_column = st.columns(2)
-                with left_column:
-                    st.subheader("Rekomendasi Berdasarkan Cosine Similarity")
-                    st.write("##")
-                    A = Rekomen_Cos(title, False)
-                    st.write(A)
-                    
-                with right_column:
-                    st.subheader("Rekomendasi Berdasarkan Jaccard Similarity")
-                    st.write("##")
-                    A = Rekomen_Jac(title, False)
-                    st.write(A)
-            with st.container():
-                
-                st.subheader ("Hasil Sebenarnya")
-                A = Rekomen_Cos(title, False)
-                st.write(A)
-            with st.container():
-                st.write("---")
-                st.subheader("Perbandingan Hasil")
-
-                x1 = Rekomen_Cos(title, True)
-                x2 = Rekomen_Jac(title, True)
-                x3, y1, y2, y3, y4 = Hasil_aktual(title, True)
-                
-                if isinstance(x1, list): 
-                    x1.sort()
-
-                if isinstance(x2, list):
-                    x2.sort()
-                
-                if isinstance(x3, list):
-                    x3.sort()
-                
- 
-                chart_data = pd.DataFrame(
-                    list(zip(x1, x2, x3)),
-                    columns=["Cosine", "Jaccard", "Aktual"])
-                st.area_chart(chart_data)             
             
-            with st.container():
-                st.write("---")
-                st.subheader("Perbandingan Nilai Kesalahan")
-                st.write("Nilai kesalahan dari Cosine divisualisasikan pada index 0 dan Jaccard pada index 1")
-                a , b = st.columns(2)
-
-                with  a  :
-                    data = {'MAE': [y1, y2]}
-                    st.write("Mae dari Kedua Metode")
-                    st.bar_chart(data)
-                    
-                with  b  :
-                    data = {'MAE Kuadrat': [y3, y4]}
-                    st.write("Mae Kuadrat dari Kedua Metode")
-                    st.bar_chart(data)
+            if B :
+        
+                with st.container():
+                    st.write("---")
+                    left_column, right_column = st.columns(2)
+                    with left_column:
+                        st.subheader("Rekomendasi Berdasarkan Cosine Similarity")
+                        st.write("##")
+                        A = Rekomen_Cos(title, False)
+                        st.write(A)
                         
-                
+                    with right_column:
+                        st.subheader("Rekomendasi Berdasarkan Jaccard Similarity")
+                        st.write("##")
+                        A = Rekomen_Jac(title, False)
+                        st.write(A)
+                with st.container():
                     
+                    st.subheader ("Hasil Sebenarnya")
+                    A = Hasil_aktual(title, False)
+                    st.write(A)
+                with st.container():
+                    st.write("---")
+                    st.subheader("Perbandingan Hasil")
+
+                    x1 = Rekomen_Cos(title, True)
+                    x2 = Rekomen_Jac(title, True)
+                    x3, y1, y2, y3, y4 = Hasil_aktual(title, True)
+                    
+                    if isinstance(x1, list): 
+                        x1.sort()
+
+                    if isinstance(x2, list):
+                        x2.sort()
+                    
+                    if isinstance(x3, list):
+                        x3.sort()
+                    
+    
+                    chart_data = pd.DataFrame(
+                        list(zip(x1, x2, x3)),
+                        columns=["Cosine", "Jaccard", "Aktual"])
+                    st.area_chart(chart_data)             
+                
+                with st.container():
+                    st.write("---")
+                    st.subheader("Perbandingan Nilai Kesalahan")
+                    st.write("Nilai kesalahan dari Cosine divisualisasikan pada index 0 dan Jaccard pada index 1")
+                    a , b = st.columns(2)
+
+                    with  a  :
+                        data = {'MAE': [y1, y2]}
+                        st.write("Mae dari Kedua Metode")
+                        st.bar_chart(data)
+                        
+                    with  b  :
+                        data = {'MAE Kuadrat': [y3, y4]}
+                        st.write("Mae Kuadrat dari Kedua Metode")
+                        st.bar_chart(data)
+             
+            else :
+                with st.container():
+                    st.write("---")
+                    left_column, right_column = st.columns(2)
+                    with left_column:
+                        st.header("Berita ditemukan, namun bukan bagian dari evaluasi")
+                        st.write("##")
+                        st.write(
+                            """
+                            Berita yang anda maksud memang berada pada database kami, tetapi karena judul tersebut bukan bagian dari 
+                            data testing, kami tidak dapat menampilkan hasilnya untuk perbandingan MAE dan RMSE.
+                     
+                            """
+                        )
+                with right_column:
+                    st_lottie(lottie_coding4, height=300, key="coding")
+                st.write(
+                            """ 
+                            Berikut kami rekomendasikan judul berita yang dapat anda cari untuk melihat perbandingan antara Cossine dan jaccard.
+                            Anda dapat mencari:
+                
+                            - Pertumbuhan Angkatan Kerja dan Lowongan Kerja Tak Berimbang, Disnakertrans Mesuji Lirik Alumni SMA dan SMK
+                            - UBL Riset Bersama Diskominfotiksan Pemkab Pesawaran
+                            - Test Drive Hyundai Stargazer, Intip Kenyamanan dan Fitur Canggihnya!
+                         """ )     
+                    
+                        
 
         else :
             with st.container():

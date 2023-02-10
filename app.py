@@ -254,7 +254,8 @@ elif selected == "Pembahasan" :
 
     #grafik perbandingan
     y2 = df_rekomendasi[['MAE_Cos','MAE_Jac']].copy()
-    yx = y2.loc[[2, 3, 9, 13, 14, 32, 45, 47]]
+    yx = y2.loc[[2, 3, 9, 13, 28, 32, 45, 47]]
+    
     a , b = st.columns(2)
     with  a  :
         st.write("Hasil Cosine sampel")
@@ -276,7 +277,7 @@ elif selected == "Pembahasan" :
     fig, ax = plt.subplots()
     fig.set_size_inches(25, 12)
     fig.set_dpi(100)
-    sns.set(rc={'figure.facecolor':'#a8a8a8'})
+    sns.set(rc={'figure.facecolor':'#ffff'})
     sns.heatmap(df_cosine, ax=ax, cmap="cubehelix")
     st.write(fig)
     
@@ -285,7 +286,7 @@ elif selected == "Pembahasan" :
     fig, ax = plt.subplots()
     fig.set_size_inches(25, 12)
     fig.set_dpi(100)
-    sns.set(rc={'figure.facecolor':'#a8a8a8'})
+    sns.set(rc={'figure.facecolor':'#ffff'})
     sns.heatmap(df_jaccard, ax=ax, cmap="cubehelix")
     st.write(fig)
     
